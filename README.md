@@ -1,3 +1,6 @@
+TODO  
+[x] real-world 다운로드 받아서 폴더 구성 어떻게 되어있는지 확인하기
+
 # Creating a Project
 
 1. create app
