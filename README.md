@@ -1,34 +1,40 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Creating a Project
 
-## Getting Started
+1. create app
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
+```tsx
+npx create-next-app@latest
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+우리가 할 수 있는 것은 pages에서 페이지를 만드는 것 뿐 (next js 는 프레임워크다)
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+#
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+`Next.js`에서 **page**를 만드는 방법은 다음과 같다.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+페이지 디렉토리의 `.js`, `.jsx`, `.ts`, `.tsx` 파일에서 export한 React Component이다.
+각 페이지는 파일 이름을 기준으로 Routing 된다. (SvelteKit 과 동일)
 
-## Learn More
+```tsx
+URL의 이름은 file명이 될 것이다.
+pages/about.js => /about
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Dynamic Routes
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+_SvelteKit과 동일_
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+```tsx
+pages/posts/[id].js => posts/1, post/2 ...
+```
 
-## Deploy on Vercel
+## Pre-rendering
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+By default, Next.js **pre-renders** every page.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+`Next.js` 는 Client측 자바스크립트에 의해 모든 작업을 수행하는게 아니라
+각 페이지에 대한 HTML을 미리 생성한다. ⇒ SEO 향상
+
+생선된 `HTML`은 해당 페이지에 필요한 `최소 JS코드`와 연결된다.
+브라우저에 의해 `page`가 load되면 `JavaScript 코드가 실행`되어 `interactive` 하게 만든다.
+⇒ **Hydration**
