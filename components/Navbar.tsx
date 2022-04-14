@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import styles from './NavBar.module.css';
 
 function Navbar() {
   const router = useRouter();
@@ -7,12 +8,20 @@ function Navbar() {
   return (
     <nav>
       <Link href="/">
-        <a style={{ color: router.pathname === '/' ? '#ff4747' : '#06f' }}>
+        <a
+          className={`${styles.link} ${
+            router.pathname === '/' && styles.active
+          }`}
+        >
           Home
         </a>
       </Link>
       <Link href="/about">
-        <a style={{ color: router.pathname === '/about' ? '#ff4747' : '#06f' }}>
+        <a
+          className={`${styles.link} ${
+            router.pathname === '/about' && styles.active
+          }`}
+        >
           About
         </a>
       </Link>

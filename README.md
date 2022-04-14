@@ -24,6 +24,53 @@ URL의 이름은 file명이 될 것이다.
 pages/about.js => /about
 ```
 
+## A tag Routing
+
+```tsx
+function Navbar() {
+  return (
+    <nav>
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+    </nav>
+  );
+}
+
+export default Navbar;
+```
+
+다음과 같이 사용 할 경우 Lint가 뭐라고 한다.
+
+a 태그를 Home 페이지로 이동하는데 사용하지 마라! 라고 하는데
+NextJS 에서 a 태그를 네비게이팅 하는데 사용하면 안되는 이유는 앱 내에서 페이지를 네이게이트할 때 사용해야만 하는 특정 컴포넌트가 있기 때문이다.
+
+⇒ 이렇게 하면 전체 어플리케이션이 reload 된다.
+
+```tsx
+import Link from 'next/link';
+
+function Navbar() {
+  return (
+    <nav>
+      <Link href="/">
+        <a>Home</a>
+      </Link>
+      <Link href="/about">
+        <a>About</a>
+      </Link>
+    </nav>
+  );
+}
+
+export default Navbar;
+```
+
+Link를 사용할 것
+
+근데 왜 Link로 감싸고 한번 더 a 태그 씁니까??
+
+⇒ className, style 등을 Link에는 못넣어줘서
+
 ## Dynamic Routes
 
 _SvelteKit과 동일_
