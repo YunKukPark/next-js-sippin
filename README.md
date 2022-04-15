@@ -155,3 +155,147 @@ next.js는 초기상태로 pre-render 를 진행한다. (이때는 button을 눌
 - Blog Posts & 포트폴리오
 - E-commerce 상품 리스트 페이지
 - Help & FAQ & Doc 페이지
+
+# Handle Styles
+
+## CSS Modules
+
+### .module.css 패턴
+
+> className 뒤에 무작위 값이 들어가서 css의 충돌 문제 해결
+
+```tsx
+import styles from './NavBar.module.css';
+
+function Navbar() {
+  return <nav className={styles.nav}> ... </nav>;
+}
+```
+
+but. module을 가지면 2개의 파일이 생기고, 클래스이름을 작성하고 알아야 하는 것이 어렵다.
+
+## styled JSX
+
+> NextJS 고유의 방법
+
+```tsx
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import styles from './NavBar.module.css';
+
+function Navbar() {
+  const router = useRouter();
+
+  return (
+    <nav>
+      <Link href="/">
+        <a>Home</a>
+      </Link>
+      <Link href="/about">
+        <a>About</a>
+      </Link>
+      <style jsx>{`
+        nav {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        a {
+          color: #06f;
+          text-decoration: none;
+        }
+      `}</style>
+    </nav>
+  );
+}
+
+export default Navbar;
+```
+
+## Global Style
+
+> Global Style을 적용해보기 위해선 Next.js의 컨셉을 아는게 중요하다
+> `App Component`와 `App Page`
+
+우리가 NextJS로 작업할 때 생각해야 하는게 있는데, `App Page`를 고려해야한다.
+
+### `App Component` ?
+
+Next.js는 App Component를 사용하여 page를 초기화한다.
+이를 재정의하고 페이지 초기화를 제어할 수 있다.
+이로인해 다음과 같은 일을 할 수 있다.
+
+1. 페이지 변경 간 레이아웃 유지
+2. 페이지 탐색 시 state 유지
+3. componentDidCatch를 사용한 Custom에러 처리
+4. 페이지에 추가 데이터 삽입
+5. Glabal CSS 추가
+
+⇒ NextJs가 모든 페이지를 렌더링할 수 있게 해주는 어떤 컴포넌트의 청사진 같은 것.
+
+### 1. style jsx global
+
+```tsx
+<style jsx global>{`
+  nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+</style>
+```
+
+이런식으로 적용하였을 때에는 jsx global코드가 작성된 페이지에만 global style이 적용된다.
+
+그렇다면 말 그대로 모든 페이지들에 전역적으로 스타일링을 하고 싶으면 어떻게 해야 할까?
+
+### 2. `_app.tsx` (`svelte` 에서의 `_layout.svelte`와 같은 역할)
+
+기본 App을 재정의하려면 `./pages/_app.tsx` 파일을 만든다
+
+```tsx
+function App({ Component, pageProps }: AppProps) {
+  return <Component {...pageProps} />;
+}
+
+export default App;
+```
+
+global CSS 추가
+
+```tsx
+import { AppProps } from 'next/dist/shared/lib/router/router';
+import Navbar from '../components/Navbar';
+
+import '../styles/globals.css';
+
+function App({ Component, pageProps }: AppProps) {
+  return (
+    <>
+      <Navbar />
+      <Component {...pageProps} />
+      <style jsx global>
+        {`
+          nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+
+          a {
+            color: #444;
+          }
+
+          .active {
+            color: #ff4747;
+          }
+        `}
+      </style>
+    </>
+  );
+}
+export default App;
+```
+
+추가로, `파일명.module.css` 형태를 제외한 모든 `css` 파일은 `_app.tsx`에서만 `import` 해와 사용해야 함(global css 충돌 방지)

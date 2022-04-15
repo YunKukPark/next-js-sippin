@@ -6,7 +6,6 @@ function Home() {
   const increaseCount = () => setCounter(prev => prev + 1);
   return (
     <>
-      <Navbar />
       <div>hi {counter}</div>
       <button onClick={increaseCount}>+</button>
     </>
