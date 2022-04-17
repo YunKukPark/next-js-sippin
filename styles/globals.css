@@ -11,6 +11,12 @@ a {
   text-decoration: none;
 }
 
+ul,
+ol,
+li {
+  list-style: none;
+}
+
 * {
   box-sizing: border-box;
 }

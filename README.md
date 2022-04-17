@@ -1,3 +1,9 @@
+<style>
+  aside{
+    background-color: #eee; border-radius: 4px; padding: 10px 20px
+  } 
+  </style>
+
 TODO
 
 - [x] real-world 다운로드 받아서 폴더 구성 어떻게 되어있는지 확인하기
@@ -123,7 +129,7 @@ next.js는 초기상태로 pre-render 를 진행한다. (이때는 button을 눌
 
 > Next.js를 사용하면 각 페이지에 사용할 pre-rendering 방식을 선택할 수 있다.
 > 대부분의 페이지에 대해 Static Generation을 사용하고 다른 페이지에 대해서는 SSR을 사용하여
-> ”Hybird” Next.js 앱을 만들 수 있다.
+> ”Hybrid” Next.js 앱을 만들 수 있다.
 
 ### Static Generation (Recommended)
 
@@ -138,7 +144,7 @@ next.js는 초기상태로 pre-render 를 진행한다. (이때는 button을 눌
 - 페이지에서 SSR을 사용하려면 `getServerSideProps` 를 export 해줘야 한다.
 - SSR은 Static Generation보다 성능이 느리기 때문에 반드시 필요한 경우에만 사용 할 것
 
-## When shoud I use Static Generation?
+## When should I use Static Generation?
 
 <aside style="background-color: #eee; border-radius: 4px; padding: 10px 20px">
 👉🏻 앵간하면 써라
@@ -205,7 +211,7 @@ function Navbar() {
           color: #06f;
           text-decoration: none;
         }
-      `}</style>
+      `}</>
     </nav>
   );
 }
@@ -352,3 +358,88 @@ export default App;
 >
 > - 너무 큰 `_app.tsx` 를 갖기 싫어서.
 >   ⇒ global로 import 해야 할 많은 것들이 있을 건데, 그런 것들이 많이 쌓이면 관리가 힘들어지기 때문에 (관심사 분리)
+
+# Fetching Data
+
+## 1. Next.js를 통해 API key 숨기기 (redirect / rewrite)
+
+<aside>
+👉🏻 **Redirect**
+⇒ `source`에 정해놓은 URL로 갈 때 `destination` URL로 보내주는 것
+
+**Rewrite**
+⇒ Rewrite는 유저를 redirect 시키기는 하지만, URL은 변하지 않는다.
+
+</aside>
+
+Nextjs 에서는 Server와 Client 가 있다.
+
+### Redirect
+
+`next.config.js` 로 들어가서 다음과 같이 설정
+
+```tsx
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  async redirects() {
+    return [
+      {
+        source: '/contact',
+        destination: '/form',
+        permanent: false,
+      },
+    ];
+  },
+};
+
+module.exports = nextConfig;
+```
+
+1. `source`를 찾는다. (URL로 들어오는 값)
+2. `destination`서 보내줄 곳을 정한다. (Redirect 해줄 주소)
+
+```tsx
+async redirects() {
+    return [
+      {
+        source: '/old-blog/:path*',
+        destination: '/new-blog/:path*',
+        permanent: false,
+      },
+    ];
+  },
+```
+
+위와 같이 pattern matching 도 redirect할 수 있다.
+
+또, `*` 을 붙여주면 주소 뒤에 모든 것을 catch 할 수 있다.  
+ex (`.../old-blog/123/comment/234` ⇒ `.../new-blog/123/comment/234`)
+
+### Rewrites
+
+```tsx
+async rewrites() {
+    return [
+      {
+        source: '/api/movies',
+        destination: `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}`,
+      },
+    ];
+  },
+```
+
+이런 식으로 민감한 정보를 마스킹할 수 있다.
+
+### Fetching
+
+```tsx
+const [movies, setMovies] = useState();
+
+useEffect(() => {
+  (async () => {
+    const { results } = await fetch(`/api/movies`).then(res => res.json());
+    setMovies(results);
+  })();
+}, []);
+```
