@@ -1,10 +1,4 @@
-<style>
-  aside{
-    background-color: #eee; border-radius: 4px; padding: 10px 20px
-  } 
-  </style>
-
-TODO
+### TODO
 
 - [x] real-world 다운로드 받아서 폴더 구성 어떻게 되어있는지 확인하기
 
@@ -363,7 +357,7 @@ export default App;
 
 ## 1. Next.js를 통해 API key 숨기기 (redirect / rewrite)
 
-<aside>
+<aside style="background-color: #eee; border-radius: 4px; padding: 10px 20px">
 👉🏻 **Redirect**
 ⇒ `source`에 정해놓은 URL로 갈 때 `destination` URL로 보내주는 것
 
