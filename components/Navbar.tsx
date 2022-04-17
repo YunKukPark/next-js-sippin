@@ -13,6 +13,14 @@ function Navbar() {
       <Link href="/about">
         <a className={router.pathname === '/about' ? 'active' : ''}>About</a>
       </Link>
+
+      <style jsx>
+        {`
+          a.active {
+            color: tomato;
+          }
+        `}
+      </style>
     </nav>
   );
 }

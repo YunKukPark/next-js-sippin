@@ -299,3 +299,56 @@ export default App;
 ```
 
 추가로, `파일명.module.css` 형태를 제외한 모든 `css` 파일은 `_app.tsx`에서만 `import` 해와 사용해야 함(global css 충돌 방지)
+
+# Patterns
+
+> 많은 사람들이 NextJS를 이용할 때 따르는 흔한 패턴은 뭘까??
+
+## 1. Layout Pattern
+
+svelte의 `_layout` 과 같다.
+`<slot />` 을 사용하는 대신 `children` 을 사용한다.
+
+그렇다면 Svelte 처럼 layout을 다시 reset, 재정의 하는 방법이 있는지 더 알아봐야 겠다.
+(관리자와 일반사용자 페이지의 layout이 다를 경우 필요)
+
+```tsx
+**./components/Layout.tsx**
+
+import React from 'react';
+import Navbar from './Navbar';
+
+function Layout({ children }: { children: React.ReactChild }) {
+  return (
+    <>
+      <Navbar />
+      <div>{children}</div>
+    </>
+  );
+}
+export default Layout;
+```
+
+```tsx
+**./pages/_app.tsx**
+
+import { AppProps } from 'next/dist/shared/lib/router/router';
+import Layout from '../components/Layout';
+
+import '../styles/globals.css';
+
+function App({ Component, pageProps }: AppProps) {
+  return (
+    <Layout>
+      <Component {...pageProps} />
+    </Layout>
+  );
+}
+
+export default App;
+```
+
+> Layout 패턴의 사용이유는?
+>
+> - 너무 큰 `_app.tsx` 를 갖기 싫어서.
+>   ⇒ global로 import 해야 할 많은 것들이 있을 건데, 그런 것들이 많이 쌓이면 관리가 힘들어지기 때문에 (관심사 분리)
