@@ -1,8 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import Seo from '../components/Seo';
 
+type IMovieProps = {
+  id: number;
+  backdrop_path: string;
+  original_title: string;
+  overview: string;
+  poster_path: string;
+  title: string;
+  vote_average: number;
+  genre_ids: [number];
+};
+
 function Home() {
-  const [movies, setMovies] = useState();
+  const [movies, setMovies] = useState<IMovieProps[] | undefined>();
 
   useEffect(() => {
     (async () => {
@@ -15,9 +26,9 @@ function Home() {
     <>
       <Seo title="Home"></Seo>
       {!movies && <h4>Loading...</h4>}
-      <ul>
+      <ul className="container">
         {movies?.map(movie => (
-          <li key={movie.id}>
+          <li key={movie.id} className="movie">
             <img src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} />
             <h4>{movie.original_title}</h4>
           </li>
